@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useReducer, useEffect, useCallback } from "react";
 import useFetchPhotos from "../hooks/useFetchPhotos";
 import { favouriteReducer } from "../reducer/favouriteReducer";

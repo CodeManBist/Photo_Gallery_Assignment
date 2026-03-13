@@ -1,3 +1,4 @@
+
 function PhotoCard({ photo, isFavourite, onToggle }) {
   return (
     <div className="border rounded-lg overflow-hidden shadow">

@@ -1,10 +1,3 @@
-import useFetchPhotos from "../hooks/useFetchPhotos";
-
-
-
-
-
-
 import { useState, useMemo, useReducer, useEffect, useCallback } from "react";
 import useFetchPhotos from "../hooks/useFetchPhotos";
 import { favouriteReducer } from "../reducer/favouriteReducer";
@@ -23,18 +16,32 @@ const Gallery = () => {
     localStorage.setItem("favourites", JSON.stringify(favourites));
   }, [favourites]);
 
+  // useCallback prevents unnecessary re-renders of SearchBar
   const handleSearch = useCallback((value) => {
     setSearch(value);
   }, []);
 
+  // useMemo efficiently computes filtered photos
   const filteredPhotos = useMemo(() => {
     return photos.filter((photo) =>
       photo.author.toLowerCase().includes(search.toLowerCase())
     );
   }, [photos, search]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // Show a Tailwind spinner while loading
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-40">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  // Show a styled error message
+  if (error)
+    return (
+      <div className="text-red-600 text-center font-semibold mt-8">
+        {error}
+      </div>
+    );
 
   return (
     <div>

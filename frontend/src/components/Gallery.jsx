@@ -47,16 +47,20 @@ const Gallery = () => {
   return (
     <div>
       <SearchBar search={search} setSearch={handleSearch} />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {filteredPhotos.map((photo) => (
-          <PhotoCard
-            key={photo.id}
-            photo={photo}
-            isFavourite={!!favourites.find((fav) => fav.id === photo.id)}
-            onToggle={(photo) => dispatch({ type: "TOGGLE", payload: photo })}
-          />
-        ))}
-      </div>
+      {filteredPhotos.length === 0 ? (
+        <div className="text-center text-gray-500 mt-8">No photos found for this author.</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {filteredPhotos.map((photo) => (
+            <PhotoCard
+              key={photo.id}
+              photo={photo}
+              isFavourite={!!favourites.find((fav) => fav.id === photo.id)}
+              onToggle={(photo) => dispatch({ type: "TOGGLE", payload: photo })}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

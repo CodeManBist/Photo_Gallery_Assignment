@@ -1,9 +1,31 @@
-import { useState, useMemo } from "react";
 import useFetchPhotos from "../hooks/useFetchPhotos";
+
+
+
+
+
+
+import { useState, useMemo, useReducer, useEffect, useCallback } from "react";
+import useFetchPhotos from "../hooks/useFetchPhotos";
+import { favouriteReducer } from "../reducer/favouriteReducer";
+import SearchBar from "./SearchBar";
+import PhotoCard from "./PhotoCard";
 
 const Gallery = () => {
   const { photos, loading, error } = useFetchPhotos();
   const [search, setSearch] = useState("");
+  const [favourites, dispatch] = useReducer(favouriteReducer, [], () => {
+    const favs = localStorage.getItem("favourites");
+    return favs ? JSON.parse(favs) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("favourites", JSON.stringify(favourites));
+  }, [favourites]);
+
+  const handleSearch = useCallback((value) => {
+    setSearch(value);
+  }, []);
 
   const filteredPhotos = useMemo(() => {
     return photos.filter((photo) =>
@@ -16,20 +38,15 @@ const Gallery = () => {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search by author..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
-
+      <SearchBar search={search} setSearch={handleSearch} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredPhotos.map((photo) => (
-          <div key={photo.id}>
-            <img src={photo.download_url} alt={photo.author} />
-            <p>{photo.author}</p>
-          </div>
+          <PhotoCard
+            key={photo.id}
+            photo={photo}
+            isFavourite={!!favourites.find((fav) => fav.id === photo.id)}
+            onToggle={(photo) => dispatch({ type: "TOGGLE", payload: photo })}
+          />
         ))}
       </div>
     </div>

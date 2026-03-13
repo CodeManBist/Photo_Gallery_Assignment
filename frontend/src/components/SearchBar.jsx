@@ -1,3 +1,4 @@
+export default SearchBar;
 function SearchBar({ search, setSearch }) {
   return (
     <input
@@ -6,8 +7,8 @@ function SearchBar({ search, setSearch }) {
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       className="border p-2 w-full mb-4"
+      aria-label="Search photos by author"
     />
   );
 }
 
-export default SearchBar;
